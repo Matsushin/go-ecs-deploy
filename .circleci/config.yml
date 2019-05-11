@@ -16,7 +16,7 @@ jobs:
       - run:
           ame: TAG ECR API
           command: |
-            docker tag go-ecs-deploy-app ${$AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/go-ecs-deploy-app:latest
+            docker tag go-ecs-deploy-app $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/go-ecs-deploy-app:latest
       - run:
           name: Deploy
           command: |
