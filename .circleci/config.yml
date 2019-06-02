@@ -6,9 +6,9 @@ jobs:
       steps:
         - checkout
         - run:
-          name: "run test"
-          command: |
-            go test
+            name: "run test"
+            command: |
+              go test
   deploy:
     working_directory: ~/go/src/github.com/Matsushin/go-ecs-deploy
     docker:
