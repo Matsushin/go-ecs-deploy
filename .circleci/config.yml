@@ -1,6 +1,15 @@
 version: 2
 jobs:
-  ecr-deploy:
+  test:
+      machine:
+        image: circleci/classic:edge
+      steps:
+        - checkout
+        - run:
+            name: "run test"
+            command: |
+              go test
+  deploy:
     working_directory: ~/go/src/github.com/Matsushin/go-ecs-deploy
     docker:
       - image: circleci/python:2.7-node-browsers
@@ -14,22 +23,29 @@ jobs:
           command: |
             docker build -f ./Dockerfile  -t go-ecs-deploy-app .
       - run:
-          ame: TAG ECR API
+          name: TAG ECR API
           command: |
             docker tag go-ecs-deploy-app $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/go-ecs-deploy-app:latest
       - run:
           name: Deploy
           command: |
-            export AWS_DEFAULT_REGION="ap-northeast-1"
-            bash ./deploy.sh
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              export AWS_DEFAULT_REGION="ap-northeast-1"
+              bash ./deploy.sh
+            fi
 
 # Workflows
 workflows:
   version: 2
-  ecr-deploy:
+  test_and_deploy:
     jobs:
-      - ecr-deploy:
+      - test
+      - deploy:
+          requires:
+            - test
           filters:
             branches:
               only:
+                - DEPLOY/test
                 - master
+                - fixes/circleci-deploy-failed
