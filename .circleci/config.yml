@@ -23,7 +23,7 @@ jobs:
           command: |
             docker build -f ./Dockerfile  -t go-ecs-deploy-app .
       - run:
-          ame: TAG ECR API
+          name: TAG ECR API
           command: |
             docker tag go-ecs-deploy-app $AWS_ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/go-ecs-deploy-app:latest
       - run:
