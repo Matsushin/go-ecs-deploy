@@ -1,6 +1,15 @@
 version: 2
 jobs:
-  ecr-deploy:
+  test:
+      machine:
+        image: circleci/classic:edge
+      steps:
+        - checkout
+        - run:
+          name: "run test"
+          command: |
+            go test
+  deploy:
     working_directory: ~/go/src/github.com/Matsushin/go-ecs-deploy
     docker:
       - image: circleci/python:2.7-node-browsers
@@ -28,6 +37,15 @@ jobs:
 # Workflows
 workflows:
   version: 2
-  ecr-deploy:
+  test_and_deploy:
     jobs:
-      - ecr-deploy:
+      - test
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - DEPLOY/test
+                - master
+                - fixes/circleci-deploy-failed
