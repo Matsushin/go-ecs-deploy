@@ -48,4 +48,3 @@ workflows:
               only:
                 - DEPLOY/test
                 - master
-                - fixes/circleci-deploy-failed
